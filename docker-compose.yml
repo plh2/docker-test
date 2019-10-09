@@ -1,0 +1,49 @@
+version: "3.5"
+
+services:
+
+  frontend:
+    build:
+      context: ./frontend/
+    command: "npm run prod"
+    networks:
+      - front-tier
+
+  backend:
+    build:
+      context: ./backend/
+    command: "flask run --host=0.0.0.0"
+    ports:
+      - "5000:5000"
+    networks:
+      - back-tier
+    restart: always
+  mongo:
+    image: mongo
+    command: --serviceExecutor adaptive
+    ports: ["27017"]
+    restart: always
+    networks:
+      - back-tier
+
+  redis:
+    image: 'redis'
+    ports: ["6379"]
+    networks:
+      - back-tier
+
+  nginx:
+    restart: always
+    build:
+      context: ./nginx/
+    links:
+      - frontend
+    ports:
+    - "80:80"
+    networks:
+      - front-tier
+
+
+networks:
+  front-tier:
+  back-tier:
