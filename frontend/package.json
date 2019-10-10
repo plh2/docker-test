@@ -6,14 +6,20 @@
   "description": "frontend",
   "scripts": {
     "prod": "hs",
-    "dev": "parcel watch index.html -p 8080"
+    "dev": "parcel -p 1234 --hmr-port 1235 watch index.html"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "http-server": "^0.11.1",
     "parcel-bundler": "^1.12.4"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/pengliheng/docker-test.git"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "po": "^4.5.2"
   }
 }

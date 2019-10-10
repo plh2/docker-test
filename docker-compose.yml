@@ -6,7 +6,11 @@ services:
     build:
       context: ./frontend/
     command: "npm run dev"
+    volumes:
+      - ./frontend:/frontend
     restart: always
+    ports:
+      - "1235:1235"
     networks:
       - front-tier
 
@@ -38,7 +42,7 @@ services:
     build:
       context: ./nginx/
     ports:
-    - "80:80"
+    - "80:1234"
     - "5000:5000"
     networks:
       - front-tier
