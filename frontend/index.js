@@ -2,7 +2,7 @@ import 'babel-polyfill'
 
 (async() => {
   const res = await new Promise((resolve, reject) => {
-    fetch('http://localhost:5000')
+    fetch('http://backend:5000')
       .then(res => res.json())
       .then(res => resolve(res))
       .catch(err => reject(err))
