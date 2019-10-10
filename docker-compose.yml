@@ -13,22 +13,18 @@ services:
     build:
       context: ./backend/
     command: "flask run --host=0.0.0.0"
-    ports:
-      - "5000:5000"
     networks:
       - back-tier
     restart: always
   mongo:
     image: mongo
     command: --serviceExecutor adaptive
-    ports: ["27017"]
     restart: always
     networks:
       - back-tier
 
   redis:
     image: 'redis'
-    ports: ["6379"]
     networks:
       - back-tier
 
@@ -36,11 +32,9 @@ services:
     restart: always
     build:
       context: ./nginx/
-    links:
-      - frontend
-      - backend
     ports:
     - "80:80"
+    - "5000:5000"
     networks:
       - front-tier
       - back-tier
