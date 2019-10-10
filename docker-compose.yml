@@ -41,8 +41,10 @@ services:
     restart: always
     build:
       context: ./nginx/
+    volumes:
+      - ./nginx:/var/log/nginx/
     ports:
-    - "80:1234"
+    - "8080:9527"
     - "5000:5000"
     networks:
       - front-tier
