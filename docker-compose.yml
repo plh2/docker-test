@@ -38,10 +38,12 @@ services:
       context: ./nginx/
     links:
       - frontend
+      - backend
     ports:
     - "80:80"
     networks:
       - front-tier
+      - back-tier
 
 
 networks:
