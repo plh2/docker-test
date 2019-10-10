@@ -1,11 +1,12 @@
-version: "3.5"
+version: "3.7"
 
 services:
 
   frontend:
     build:
       context: ./frontend/
-    command: "npm run prod"
+    command: "npm run dev"
+    restart: always
     networks:
       - front-tier
 
@@ -20,11 +21,15 @@ services:
     image: mongo
     command: --serviceExecutor adaptive
     restart: always
+    volumes:
+      - ./mongodb:/data/db
     networks:
       - back-tier
 
   redis:
     image: 'redis'
+    volumes:
+      - ./redis:/var/lib/redis
     networks:
       - back-tier
 
