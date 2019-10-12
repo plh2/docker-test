@@ -44,7 +44,7 @@ services:
     volumes:
       - ./nginx:/var/log/nginx/
     ports:
-    - "8080:9527"
+    - "80:80"
     - "5000:5000"
     networks:
       - front-tier

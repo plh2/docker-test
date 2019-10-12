@@ -4,6 +4,7 @@ COPY . /frontend
 
 WORKDIR /frontend
 
+RUN npm install -g parcel-bundler
+
 RUN npm install
 
-RUN npm install -g @vue/cli
