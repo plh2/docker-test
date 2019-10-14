@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3"
 
 services:
 
@@ -13,11 +13,14 @@ services:
       - "1235:1235"
     networks:
       - front-tier
+      - back-tier
 
   backend:
     build:
       context: ./backend/
-    command: "flask run --host=0.0.0.0"
+    command: "python app.py --host=0.0.0.0"
+    volumes:
+      - ./backend:/backend
     networks:
       - back-tier
     restart: always
@@ -29,6 +32,8 @@ services:
       - ./mongodb:/data/db
     networks:
       - back-tier
+    logging:
+      driver: none
 
   redis:
     image: 'redis'
