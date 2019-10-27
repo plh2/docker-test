@@ -1,8 +1,10 @@
 <template lang="pug">
   .container 
-    .row.left left {{message}}
-      el-button click me
-    .row.middle middle
+    .row.left left
+      el-button(@click="join") join
+    .row.middle 
+      .item(v-for="(msg,i) in msgBox" :key="i") {{msg}}
+      el-input(@submit="handleMessageSubmit")
     .row.right 
       .person(:key="item.id" v-for="item in onlineList") {{item.name}}
 
@@ -11,10 +13,12 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import io from 'socket.io-client'
 
 @Component({})
 export default class MyComponent extends Vue {
-  message: string = "Hello!";
+  public msgBox: string[] = [];
+  public socket: io.socket; 
   public onlineList: object[] = [
     { name: "peng", id: "1" },
     { name: "heng", id: "2" },
@@ -22,23 +26,26 @@ export default class MyComponent extends Vue {
     { name: "bing", id: "4" }
   ];
 
+  public join() {
+    this.socket.emit('join', {data: 'I\'m connected!'});
+  }
+
+  public handleMessageSubmit(val) {
+    this.socket.emit('message', val);
+  }
+
   mounted() {
-    io = window.io;
-    var socket = io.connect("http://" + document.domain + ":" + 5000);
-    socket.on("connect", (data) => {
-      socket.emit('join', {data: 'I\'m connected!'});
+    this.socket = io.connect("http://" + document.domain + ":" + 5000);
+    this.socket.on("connect", (data) => {
+      console.log("connect")
     });
-    socket.on("my response", msg => {
-      if (msg.data) {
-        this.$message({
-          type: "success",
-          showClose: true,
-          message: msg.data
-        });
-      }
-      if (typeof msg.user_name !== "undefined") {
-        debugger;
-      }
+    this.socket.on("message", msg => {
+      this.msgBox.push(msg)
+      // this.$message({
+      //   type: "success",
+      //   showClose: true,
+      //   message: msg
+      // });
     });
   }
 }

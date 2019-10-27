@@ -7,6 +7,8 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'mysecret'
+socketIO = SocketIO(app)
 CORS(app)
 
 # redis
@@ -16,9 +18,6 @@ r.set('c', 0)
 # db
 DB = pymongo.MongoClient("mongodb://mongo:27017")
 db = DB["test"]
-
-socketIO = SocketIO(app)
-
 
 @app.route("/")
 def helloWorld():
@@ -31,31 +30,39 @@ def helloWorld():
         # 'data': loads(data)
     }), 200, {'Content-Type': 'application/json; charset=utf-8'}
 
-
 @socketIO.on('connect')
 def test_connect():
-    emit({'data': 'Connected'})
+    send('User Join', broadcast=True)
+    # emit({'data': 'Connected'})
 
 
-@socketIO.on('disconnect')
-def test_disconnect():
-    print('Client disconnected')
+# @socketIO.on('disconnect')
+# def test_disconnect():
+#     print('Client disconnected')
 
 
-@socketIO.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    send(username + ' has entered the room.', room=room)
+# @socketIO.on('join')
+# def on_join(data):
+#     print('join',data)
+#     username = data['username']
+#     # room = data['room']
+#     # join_room(room)
+#     # send(username + ' has entered the room.', room=room)
 
 
-@socketIO.on('leave')
-def on_leave(data):
-    username = data['username']
-    room = data['room']
-    leave_room(room)
-    send(username + ' has left the room.', room=room)
+# @socketIO.on('leave')
+# def on_leave(data):
+#     print('leave',data)
+#     username = data['username']
+#     room = data['room']
+#     leave_room(room)
+#     send(username + ' has left the room.', room=room)
+
+
+@socketIO.on('message')
+def handleMessage(msg):
+    print('Message: ' + msg)
+    send(msg, broadcast=True)
 
 
 if __name__ == '__main__':
